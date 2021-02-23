@@ -14,15 +14,36 @@ if __name__ == "__main__":
 # Methods to be called when a specific event is raised
 
 
-def make_folder():
-    newpath = ".\Output"
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
+def make_folders():
+    outputFolderPath = ".\Output"
+    pdfFolderPath = ".\Output\PDF_Files"
+    pngFolderPath = ".\Output\PNG_Files"
+    jpgFolderPath = ".\Output\JPG_Files"
+    docxFolderPath = ".\Output\docx_Files"
+    otherFolderPath = ".\Output\other"
+    # Create destination folder
+    if not os.path.exists(outputFolderPath):
+        os.makedirs(outputFolderPath)
+    # Create folder for PDF files
+    if not os.path.exists(pdfFolderPath):
+        os.makedirs(pdfFolderPath)
+    # Create folder for PNG files
+    if not os.path.exists(pngFolderPath):
+        os.makedirs(pngFolderPath)
+    # Create folder for JPG files
+    if not os.path.exists(jpgFolderPath):
+        os.makedirs(jpgFolderPath)
+    # Create folder for docx files
+    if not os.path.exists(docxFolderPath):
+        os.makedirs(docxFolderPath)
+    # Create folder for all other files
+    if not os.path.exists(otherFolderPath):
+        os.makedirs(otherFolderPath)
 
 
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    make_folder()
+    make_folders()
 
 
 def on_deleted(event):
