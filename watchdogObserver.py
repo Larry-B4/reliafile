@@ -1,6 +1,7 @@
 import time
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+import os
 
 if __name__ == "__main__":
     patterns = "*" # Patterns that we want to handle
