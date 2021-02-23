@@ -17,8 +17,8 @@ if __name__ == "__main__":
 def make_folders():
     outputFolderPath = ".\Output"
     pdfFolderPath = ".\Output\PDF_Files"
-    pngFolderPath = ".\Output\PNG_Files"
-    jpgFolderPath = ".\Output\JPG_Files"
+    imageFolderPath = ".\Output\Image_Files"
+    txtFolderPath = ".\Output\TXT_Files"
     docxFolderPath = ".\Output\docx_Files"
     otherFolderPath = ".\Output\other"
     # Create destination folder
@@ -28,11 +28,11 @@ def make_folders():
     if not os.path.exists(pdfFolderPath):
         os.makedirs(pdfFolderPath)
     # Create folder for PNG files
-    if not os.path.exists(pngFolderPath):
-        os.makedirs(pngFolderPath)
-    # Create folder for JPG files
-    if not os.path.exists(jpgFolderPath):
-        os.makedirs(jpgFolderPath)
+    if not os.path.exists(imageFolderPath):
+        os.makedirs(imageFolderPath)
+    # Create folder for TXT files
+    if not os.path.exists(txtFolderPath):
+        os.makedirs(txtFolderPath)
     # Create folder for docx files
     if not os.path.exists(docxFolderPath):
         os.makedirs(docxFolderPath)
