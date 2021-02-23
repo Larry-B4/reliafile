@@ -15,17 +15,13 @@ observe_settings = settings['observe_settings'] # delete_files: default(false), 
 
 # All custom methods
 
-# Function to copy file from one folder to another
-def copy_file(f):
+def copy_file(f): # Function to copy file from one folder to another
 
-# Function to create folders when needed
-def create_folder(f):
+def create_folder(f): # Function to create folders when needed
 
-# Function to delete file
-def delete_file(f):
+def delete_file(f): # Function to delete file
 
-# Function to update file in destination folder when it's modified in observed folder
-def update_file(f)
+def update_file(f): # Function to update file in destination folder when it's modified in observed folder
 
 # Check if initial files need to be copied
 
