@@ -10,28 +10,48 @@ with open("project_settings.json") as json_data_file:
     settings = json.load(json_data_file)
 
 observed_folder = settings['observed_folder']
-destination_folder = settings['destination_folder']
-observe_settings = settings['observe_settings'] # delete_files: default(false), sort_files: default(true), copy_initial_files: default(false)
+destination_folder = settings['destination_folder'] # delete_files: default(false), sort_files: default(true), copy_initial_files: default(false)
+observe_settings = settings['observe_settings']
 
 # All custom methods
 
-def copy_file(f): # Function to copy file from one folder to another
 
-def create_folder(f): # Function to create folders when needed
+def copy_file(f):  # Function to copy file from one folder to another
+    print()
 
-def delete_file(f): # Function to delete file
 
-def update_file(f): # Function to update file in destination folder when it's modified in observed folder
+def create_folder(f):  # Function to create folders when needed
+    print()
+
+
+def delete_file(curr_file_src):  # Function to delete file
+    os.remove(curr_file_src)
+
+
+# Function to update file in destination folder when it's modified in observed folder
+def update_file(curr_file_src):
+    print(curr_file_src)
+    if(observe_settings['sort_files']):
+        print()
+        # Write some code to sort the file into the correct folder
+    else:
+        shutil.copy(curr_file_src, destination_folder)
+
+    if(observe_settings['delete_files']):
+        delete_file(curr_file_src)
+    
 
 # Check if initial files need to be copied
+
 
 if observe_settings['copy_initial_files']:
     allFiles = os.listdir(observed_folder)
     if observe_settings['sort_files']:
+        print()
         # Write some code to sort the files into folders
     else:
         for f in allFiles:
-        shutil.copy(observed_folder + '\\' + f, destination_folder)
+            shutil.copy(observed_folder + '\\' + f, destination_folder)
 
 # Start observing the folder
 
@@ -44,6 +64,7 @@ if __name__ == "__main__":
         patterns, ignore_patterns, ignore_directories, case_sensitive)
 
 # Methods to be called when a specific event is raised
+
 
 def make_folders():
     outputFolderPath = ".\Output"
@@ -74,7 +95,7 @@ def make_folders():
 
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    make_folders()
+    # make_folders()
 
 
 def on_deleted(event):
@@ -83,6 +104,8 @@ def on_deleted(event):
 
 def on_modified(event):
     print(f"hey buddy, {event.src_path} has been modified")
+    curr_file_src = event.src_path
+    update_file(curr_file_src)
 
 
 def on_moved(event):
