@@ -15,37 +15,13 @@ observe_settings = settings['observe_settings'] # delete_files: default(false), 
 
 # All custom methods
 
-def copy_file(f): # Function to copy file from one folder to another
+def get_file_extension(sourcePath):
+    # Get filename extension
+    filename, file_extension = os.path.splitext(sourcePath)
+    print(file_extension)
 
-def create_folder(f): # Function to create folders when needed
 
-def delete_file(f): # Function to delete file
-
-def update_file(f): # Function to update file in destination folder when it's modified in observed folder
-
-# Check if initial files need to be copied
-
-if observe_settings['copy_initial_files']:
-    allFiles = os.listdir(observed_folder)
-    if observe_settings['sort_files']:
-        # Write some code to sort the files into folders
-    else:
-        for f in allFiles:
-        shutil.copy(observed_folder + '\\' + f, destination_folder)
-
-# Start observing the folder
-
-if __name__ == "__main__":
-    patterns = "*"  # Patterns that we want to handle
-    ignore_patterns = ""  # Patterns that will be ignored
-    ignore_directories = False
-    case_sensitive = True  # Patterns are treated case-sensitive
-    my_event_handler = PatternMatchingEventHandler(
-        patterns, ignore_patterns, ignore_directories, case_sensitive)
-
-# Methods to be called when a specific event is raised
-
-def make_folders():
+def create_folders():
     outputFolderPath = ".\Output"
     pdfFolderPath = ".\Output\PDF_Files"
     imageFolderPath = ".\Output\Image_Files"
@@ -71,10 +47,39 @@ def make_folders():
     if not os.path.exists(otherFolderPath):
         os.makedirs(otherFolderPath)
 
+def delete_file(f):
+    print() # Function to delete file
+
+def update_file(f):
+    print() # Function to update file in destination folder when it's modified in observed folder
+
+# Check if initial files need to be copied
+
+if observe_settings['copy_initial_files']:
+    allFiles = os.listdir(observed_folder)
+    if observe_settings['sort_files']:
+        print()
+        # Write some code to sort the files into folders
+    else:
+        for f in allFiles:
+            shutil.copy(observed_folder + '\\' + f, destination_folder)
+
+# Start observing the folder
+
+if __name__ == "__main__":
+    patterns = "*"  # Patterns that we want to handle
+    ignore_patterns = ""  # Patterns that will be ignored
+    ignore_directories = False
+    case_sensitive = True  # Patterns are treated case-sensitive
+    my_event_handler = PatternMatchingEventHandler(
+        patterns, ignore_patterns, ignore_directories, case_sensitive)
+
+# Methods to be called when a specific event is raised
 
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    make_folders()
+    create_folders()
+    get_file_extension(event.src_path)
 
 
 def on_deleted(event):
