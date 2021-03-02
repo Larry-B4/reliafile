@@ -18,34 +18,34 @@ observe_settings = settings['observe_settings'] # delete_files: default(false), 
 def get_file_extension(sourcePath):
     # Get filename extension
     filename, file_extension = os.path.splitext(sourcePath)
-    print(file_extension)
 
+    if file_extension == ".txt":
+        txtFolderPath = destination_folder + "\\TXT_Files"
+        create_folder(txtFolderPath)
+        move_file(sourcePath, txtFolderPath)
+    elif file_extension == ".pdf":
+        pdfFolderPath = destination_folder + "\\PDF_Files"
+        create_folder(pdfFolderPath)
+        move_file(sourcePath, pdfFolderPath)
+    elif file_extension == ".png":
+        imageFolderPath = destination_folder + "\\Image_Files"
+        create_folder(imageFolderPath)
+        move_file(sourcePath, imageFolderPath)
+    elif file_extension == ".docx":
+        docxFolderPath = destination_folder + "\\docx_Files"
+        create_folder(docxFolderPath)
+        move_file(sourcePath, docxFolderPath)
+    else:
+        otherFolderPath = destination_folder + "\\other"
+        create_folder(otherFolderPath)
+        move_file(sourcePath, otherFolderPath)
 
-def create_folders():
-    outputFolderPath = ".\Output"
-    pdfFolderPath = ".\Output\PDF_Files"
-    imageFolderPath = ".\Output\Image_Files"
-    txtFolderPath = ".\Output\TXT_Files"
-    docxFolderPath = ".\Output\docx_Files"
-    otherFolderPath = ".\Output\other"
-    # Create destination folder
-    if not os.path.exists(outputFolderPath):
-        os.makedirs(outputFolderPath)
-    # Create folder for PDF files
-    if not os.path.exists(pdfFolderPath):
-        os.makedirs(pdfFolderPath)
-    # Create folder for PNG files
-    if not os.path.exists(imageFolderPath):
-        os.makedirs(imageFolderPath)
-    # Create folder for TXT files
-    if not os.path.exists(txtFolderPath):
-        os.makedirs(txtFolderPath)
-    # Create folder for docx files
-    if not os.path.exists(docxFolderPath):
-        os.makedirs(docxFolderPath)
-    # Create folder for all other files
-    if not os.path.exists(otherFolderPath):
-        os.makedirs(otherFolderPath)
+def create_folder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+def move_file(sourcePath, destinationPath):
+    shutil.copy(sourcePath, destinationPath)
 
 def delete_file(f):
     print() # Function to delete file
@@ -78,7 +78,6 @@ if __name__ == "__main__":
 
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    create_folders()
     get_file_extension(event.src_path)
 
 
