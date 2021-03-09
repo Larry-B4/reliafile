@@ -1,10 +1,9 @@
 import time
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
-import shutil
+from distutils.file_util import copy_file
 import os
 import json
-from distutils.file_util import copy_file
 
 # Read project_settings.json file and insert information into global variables
 with open("project_settings.json") as json_data_file:
@@ -16,7 +15,6 @@ destination_folder = settings['destination_folder']
 observe_settings = settings['observe_settings']
 
 # All custom methods
-
 
 def create_file(curr_file_src):
     if(observe_settings['sort_files']):
@@ -51,11 +49,9 @@ def get_file_extension(sourcePath):
     filename, file_extension = os.path.splitext(sourcePath)
     return file_extension
 
-
 def create_folder(folderPath):
     if not os.path.exists(folderPath):
         os.makedirs(folderPath)
-
 
 def move_file(sourcePath, destinationPath):
     copy_file(sourcePath, destinationPath, link='hard')
