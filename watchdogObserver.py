@@ -4,6 +4,7 @@ from watchdog.events import PatternMatchingEventHandler
 import shutil
 import os
 import json
+from distutils.file_util import copy_file
 
 # Read project_settings.json file and insert information into global variables
 with open("project_settings.json") as json_data_file:
@@ -57,7 +58,9 @@ def create_folder(folderPath):
 
 
 def move_file(sourcePath, destinationPath):
-    shutil.copy(sourcePath, destinationPath)
+    copy_file(sourcePath, destinationPath, link='hard')
+
+    # shutil.copy(sourcePath, destinationPath)
 
     if(observe_settings['delete_files']):
         delete_file(sourcePath)
