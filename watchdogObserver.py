@@ -10,10 +10,12 @@ with open("project_settings.json") as json_data_file:
     settings = json.load(json_data_file)
 
 observed_folder = settings['observed_folder']
-destination_folder = settings['destination_folder'] # delete_files: default(false), sort_files: default(true), copy_initial_files: default(false)
+# delete_files: default(false), sort_files: default(true), copy_initial_files: default(false)
+destination_folder = settings['destination_folder']
 observe_settings = settings['observe_settings']
 
 # All custom methods
+
 
 def create_file(curr_file_src):
     if(observe_settings['sort_files']):
@@ -42,34 +44,46 @@ def create_file(curr_file_src):
     else:
         move_file(curr_file_src, destination_folder)
 
+
 def get_file_extension(sourcePath):
     # Get filename extension
     filename, file_extension = os.path.splitext(sourcePath)
     return file_extension
 
+
 def create_folder(folderPath):
     if not os.path.exists(folderPath):
         os.makedirs(folderPath)
 
+
 def move_file(sourcePath, destinationPath):
     shutil.copy(sourcePath, destinationPath)
+
 
 def delete_file(curr_file_src):  # Function to delete file
     os.remove(curr_file_src)
 
+
+def delete_file_after_rename(old_file_src):
+    base = os.path.basename(old_file_src)
+
+    for root, dirs, files in os.walk(destination_folder):
+        for name in files:
+            if name.endswith((base)):
+                os.remove(os.path.join(root, name))
+
 # Function to update file in destination folder when it's modified in observed folder
+
+
 def update_file(curr_file_src):
     print(curr_file_src)
-    if(observe_settings['sort_files']):
-        print()
-        # Write some code to sort the file into the correct folder
-    else:
-        shutil.copy(curr_file_src, destination_folder)
+    create_file(curr_file_src)
+
     if(observe_settings['delete_files']):
         delete_file(curr_file_src)
-    
 
 # Check if initial files need to be copied
+
 
 if observe_settings['copy_initial_files']:
     allFiles = os.listdir(observed_folder)
@@ -82,7 +96,7 @@ if observe_settings['copy_initial_files']:
         # Write some code to sort the files into folders
     else:
         for f in allFiles:
-            shutil.copy(observed_folder + '\\' + f, destination_folder)
+            move_file(observed_folder + '\\' + f, destination_folder)
             if(observe_settings['delete_files']):
                 delete_file(observed_folder + '\\' + f, destination_folder)
 
@@ -98,6 +112,7 @@ if __name__ == "__main__":
 
 # Methods to be called when a specific event is raised
 
+
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
     create_file(event.src_path)
@@ -111,8 +126,14 @@ def on_modified(event):
     print(f"hey buddy, {event.src_path} has been modified")
     update_file(event.src_path)
 
+
 def on_moved(event):
     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
+    
+    # If a file has been renamed it needs to be copied
+    create_file(event.dest_path)
+    # Delete the old file after renaming
+    delete_file_after_rename(event.src_path)
 
 
 # Define which method is called on which event
