@@ -8,7 +8,9 @@ Reliafile is a project with the goal of making it easier for our users to observ
 Windows:
 
 Simply use the project_settings.json file to define the settings you would like to use in your project.
-Then define a task in the task scheduler and execute the reliafile.py file.
+Then define a task in the task scheduler and add an action with the reliafile.bat file with your desired trigger.
+
+The task scheduler is optional, you can also simply execute the reliafile.bat script and stop executing it with CTRL+C.
 
 ## Usage example
 
@@ -25,6 +27,8 @@ pip install watchdog
 
 ## Release History
 
+* 1.0.0
+    * Initial release
 * 0.0.1
     * Work in progress
 
