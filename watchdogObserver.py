@@ -59,11 +59,22 @@ def create_folder(folderPath):
 def move_file(sourcePath, destinationPath):
     shutil.copy(sourcePath, destinationPath)
 
+    if(observe_settings['delete_files']):
+        delete_file(sourcePath)
+
 
 def delete_file(curr_file_src):  # Function to delete file
-    os.remove(curr_file_src)
+    # Wait a few seconds, so the user has time to rename the file
+    time.sleep(5)
+    base = os.path.basename(curr_file_src)
+
+    for root, dirs, files in os.walk(observed_folder):
+        for name in files:
+            if name.endswith((base)):
+                os.remove(os.path.join(root, name))
 
 
+# Function to delete old file after rename
 def delete_file_after_rename(old_file_src):
     base = os.path.basename(old_file_src)
 
@@ -72,35 +83,16 @@ def delete_file_after_rename(old_file_src):
             if name.endswith((base)):
                 os.remove(os.path.join(root, name))
 
-# Function to update file in destination folder when it's modified in observed folder
-
-
-def update_file(curr_file_src):
-    print(curr_file_src)
-    create_file(curr_file_src)
-
-    if(observe_settings['delete_files']):
-        delete_file(curr_file_src)
 
 # Check if initial files need to be copied
-
-
 if observe_settings['copy_initial_files']:
-    allFiles = os.listdir(observed_folder)
-    if observe_settings['sort_files']:
-        for subdir, dirs, files in os.walk(observed_folder):
-            for f in files:
+    for subdir, dirs, files in os.walk(observed_folder):
+        for f in files:
+            if os.path.isfile(os.path.join(subdir, f)):
                 create_file(os.path.join(subdir, f))
-                if(observe_settings['delete_files']):
-                    delete_file(os.path.join(subdir, f))
-        # Write some code to sort the files into folders
-    else:
-        for f in allFiles:
-            move_file(observed_folder + '\\' + f, destination_folder)
-            if(observe_settings['delete_files']):
-                delete_file(observed_folder + '\\' + f, destination_folder)
 
 # Start observing the folder
+
 
 if __name__ == "__main__":
     patterns = "*"  # Patterns that we want to handle
@@ -126,18 +118,17 @@ def on_deleted(event):
 def on_modified(event):
     print(f"hey buddy, {event.src_path} has been modified")
     if os.path.isfile(event.src_path):
-        update_file(event.src_path)
+        create_file(event.src_path)
 
 
 def on_moved(event):
     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
-    
+
     # If a file has been renamed it needs to be copied
     if os.path.isfile(event.dest_path):
         create_file(event.dest_path)
     # Delete the old file after renaming
-    if os.path.isfile(event.src_path):
-        delete_file_after_rename(event.src_path)
+    delete_file_after_rename(event.src_path)
 
 
 # Define which method is called on which event
