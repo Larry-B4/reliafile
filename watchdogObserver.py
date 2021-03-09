@@ -115,7 +115,8 @@ if __name__ == "__main__":
 
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    create_file(event.src_path)
+    if os.path.isfile(event.src_path):
+        create_file(event.src_path)
 
 
 def on_deleted(event):
@@ -124,16 +125,19 @@ def on_deleted(event):
 
 def on_modified(event):
     print(f"hey buddy, {event.src_path} has been modified")
-    update_file(event.src_path)
+    if os.path.isfile(event.src_path):
+        update_file(event.src_path)
 
 
 def on_moved(event):
     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     
     # If a file has been renamed it needs to be copied
-    create_file(event.dest_path)
+    if os.path.isfile(event.dest_path):
+        create_file(event.dest_path)
     # Delete the old file after renaming
-    delete_file_after_rename(event.src_path)
+    if os.path.isfile(event.src_path):
+        delete_file_after_rename(event.src_path)
 
 
 # Define which method is called on which event
