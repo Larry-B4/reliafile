@@ -27,9 +27,25 @@ pip install watchdog
 
 ## Release History
 
-* 1.0.0
-    * Initial release
-* 0.0.1
+* 1.0
+    * First release
+* 0.9
+    * Replaced [shutil](https://docs.python.org/3/library/shutil.html) with [distutils.file_util](https://docs.python.org/3/distutils/apiref.html#distutils.file_util.copy_file:~:text=files.-,distutils.file_util.copy_file) to fix permission issues
+* 0.8
+    * Improved a lot of the functions
+* 0.7
+    * Fixed issues with renaming
+* 0.6
+    * Implemented delete and update functions
+* 0.5
+    * Improved copy function with folder creation
+* 0.4
+    * Settings Json File was added
+* 0.3
+    * First attempt at a copy function + folder creation
+* 0.2
+    * Working watchdog example
+* 0.1
     * Work in progress
 
 ## Meta
