@@ -15,18 +15,47 @@ observe_settings = settings['observe_settings']
 
 # All custom methods
 
+def create_file(curr_file_src):
+    if(observe_settings['sort_files']):
+        file_extension = get_file_extension(curr_file_src)
 
-def copy_file(f):  # Function to copy file from one folder to another
-    print()
+        if file_extension == ".txt":
+            txtFolderPath = destination_folder + "\\TXT_Files"
+            create_folder(txtFolderPath)
+            move_file(curr_file_src, txtFolderPath)
+        elif file_extension == ".pdf":
+            pdfFolderPath = destination_folder + "\\PDF_Files"
+            create_folder(pdfFolderPath)
+            move_file(curr_file_src, pdfFolderPath)
+        elif file_extension == ".png":
+            imageFolderPath = destination_folder + "\\Image_Files"
+            create_folder(imageFolderPath)
+            move_file(curr_file_src, imageFolderPath)
+        elif file_extension == ".docx":
+            docxFolderPath = destination_folder + "\\docx_Files"
+            create_folder(docxFolderPath)
+            move_file(curr_file_src, docxFolderPath)
+        else:
+            otherFolderPath = destination_folder + "\\other"
+            create_folder(otherFolderPath)
+            move_file(curr_file_src, otherFolderPath)
+    else:
+        move_file(curr_file_src, destination_folder)
 
+def get_file_extension(sourcePath):
+    # Get filename extension
+    filename, file_extension = os.path.splitext(sourcePath)
+    return file_extension
 
-def create_folder(f):  # Function to create folders when needed
-    print()
+def create_folder(folderPath):
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
 
+def move_file(sourcePath, destinationPath):
+    shutil.copy(sourcePath, destinationPath)
 
 def delete_file(curr_file_src):  # Function to delete file
     os.remove(curr_file_src)
-
 
 # Function to update file in destination folder when it's modified in observed folder
 def update_file(curr_file_src):
@@ -36,22 +65,26 @@ def update_file(curr_file_src):
         # Write some code to sort the file into the correct folder
     else:
         shutil.copy(curr_file_src, destination_folder)
-
     if(observe_settings['delete_files']):
         delete_file(curr_file_src)
     
 
 # Check if initial files need to be copied
 
-
 if observe_settings['copy_initial_files']:
     allFiles = os.listdir(observed_folder)
     if observe_settings['sort_files']:
-        print()
+        for subdir, dirs, files in os.walk(observed_folder):
+            for f in files:
+                create_file(os.path.join(subdir, f))
+                if(observe_settings['delete_files']):
+                    delete_file(os.path.join(subdir, f))
         # Write some code to sort the files into folders
     else:
         for f in allFiles:
             shutil.copy(observed_folder + '\\' + f, destination_folder)
+            if(observe_settings['delete_files']):
+                delete_file(observed_folder + '\\' + f, destination_folder)
 
 # Start observing the folder
 
@@ -65,37 +98,9 @@ if __name__ == "__main__":
 
 # Methods to be called when a specific event is raised
 
-
-def make_folders():
-    outputFolderPath = ".\Output"
-    pdfFolderPath = ".\Output\PDF_Files"
-    imageFolderPath = ".\Output\Image_Files"
-    txtFolderPath = ".\Output\TXT_Files"
-    docxFolderPath = ".\Output\docx_Files"
-    otherFolderPath = ".\Output\other"
-    # Create destination folder
-    if not os.path.exists(outputFolderPath):
-        os.makedirs(outputFolderPath)
-    # Create folder for PDF files
-    if not os.path.exists(pdfFolderPath):
-        os.makedirs(pdfFolderPath)
-    # Create folder for PNG files
-    if not os.path.exists(imageFolderPath):
-        os.makedirs(imageFolderPath)
-    # Create folder for TXT files
-    if not os.path.exists(txtFolderPath):
-        os.makedirs(txtFolderPath)
-    # Create folder for docx files
-    if not os.path.exists(docxFolderPath):
-        os.makedirs(docxFolderPath)
-    # Create folder for all other files
-    if not os.path.exists(otherFolderPath):
-        os.makedirs(otherFolderPath)
-
-
 def on_created(event):
     print(f"hey, {event.src_path} has been created!")
-    # make_folders()
+    create_file(event.src_path)
 
 
 def on_deleted(event):
@@ -104,9 +109,7 @@ def on_deleted(event):
 
 def on_modified(event):
     print(f"hey buddy, {event.src_path} has been modified")
-    curr_file_src = event.src_path
-    update_file(curr_file_src)
-
+    update_file(event.src_path)
 
 def on_moved(event):
     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
